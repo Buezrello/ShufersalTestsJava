@@ -30,4 +30,13 @@ public class Waits {
 
         wait.until(ExpectedConditions.invisibilityOfElementLocated(by));
     }
+
+    public static void fluentWaitElementClickable(WebDriver driver, By by, int durationSeconds) {
+        Wait<WebDriver> wait = new FluentWait<>(driver)
+                .withTimeout(Duration.ofSeconds(durationSeconds))
+                .pollingEvery(Duration.ofSeconds(1))
+                .ignoring(NoSuchElementException.class);
+
+        wait.until(ExpectedConditions.elementToBeClickable(by));
+    }
 }

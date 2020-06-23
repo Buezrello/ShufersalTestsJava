@@ -25,4 +25,8 @@ public class ChromeSampleTests extends SampleTests {
     public void testCheckLogo() {
         checkLogo();
     }
+
+    public void testCheckUserName() {
+        checkUserName();
+    }
 }

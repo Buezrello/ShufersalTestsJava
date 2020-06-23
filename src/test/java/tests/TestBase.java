@@ -56,4 +56,15 @@ public abstract class TestBase {
         driver.get(shufersalUrl);
         driver.manage().window().maximize();
     }
+
+    protected void login(String email, String password) {
+        loginPage.clickBtnLogin();
+        loginPage.enterEmail(email);
+        loginPage.enterPassword(password);
+        loginPage.clickBtnEnter();
+    }
+
+    protected void login() {
+        login(email, password);
+    }
 }

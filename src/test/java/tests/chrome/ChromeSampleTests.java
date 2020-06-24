@@ -29,4 +29,8 @@ public class ChromeSampleTests extends SampleTests {
     public void testCheckUserName() {
         checkUserName();
     }
+
+    public void testBuyCheapestMilk() {
+        buyCheapestMilk();
+    }
 }

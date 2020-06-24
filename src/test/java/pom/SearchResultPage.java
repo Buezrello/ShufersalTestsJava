@@ -114,7 +114,7 @@ public class SearchResultPage {
 
         return Double.parseDouble(price);
     }
-    
+
     public double getTotalPrice() {
         String price = totalPrice.getText();
 

@@ -31,6 +31,11 @@ public class Assertions {
         );
     }
 
+    public static void assertTwoNumbersAreEqual(Number actualNumber, Number expectedNumber, String... additionalInfo) {
+        Assert.assertEquals(actualNumber, expectedNumber,
+                String.join(" ", additionalInfo));
+    }
+
     // == private methods ==
     private static boolean containsSubstring(String text, String substring) {
         text = StringUtils.normalizeSpace(text);

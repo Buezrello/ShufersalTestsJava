@@ -1,14 +1,14 @@
 package pom;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.Select;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static constants.SearchResultPageConstants.*;
 import static utilitues.Waits.fluentWaitElementClickable;
@@ -28,8 +28,10 @@ public class SearchResultPage {
     // == web elements ==
     @FindBy(id = STR_SEARCH_RESULT_PANEL)
     private WebElement searchResultPanel;
-    @FindBy(id = STR_SORTING_SELECTOR)
-    private Select slctSort;
+    @FindBy(xpath = STR_BTN_SORT)
+    private WebElement btnSort;
+    @FindBy(xpath = STR_SORTING_FILTERS)
+    private List<WebElement> sortingFilters;
     @FindBy(xpath = STR_PRODUCTS)
     private List<WebElement> products;
     @FindBy(xpath = STR_CHEAPEST_PRODUCT)
@@ -40,6 +42,10 @@ public class SearchResultPage {
     private WebElement postagePrice;
     @FindBy(xpath = STR_TOTAL_PRICE)
     private WebElement totalPrice;
+    @FindBy(xpath = STR_BTN_DELETE_CART)
+    private List<WebElement> btnDeleteCart;
+    @FindBy(xpath = STR_BTN_CART_DELETE_AGREE)
+    private WebElement btnCleanCartAgree;
 
     // == getters ==
 
@@ -55,14 +61,44 @@ public class SearchResultPage {
         return cheapestProduct;
     }
 
-    public Select getSlctSort() {
-        return slctSort;
+
+    public WebElement getBtnSort() {
+        return btnSort;
+    }
+
+    public List<WebElement> getSortingFilters() {
+        return sortingFilters;
+    }
+
+    public WebElement getBtnCleanCartAgree() {
+        return btnCleanCartAgree;
+    }
+
+    public List<WebElement> getProductsInCart() {
+        return productsInCart;
+    }
+
+    public List<WebElement> getBtnDeleteCart() {
+        return btnDeleteCart;
     }
 
     // == public methods ==
 
     public void sortFromCheapToExpensive() {
-        slctSort.selectByIndex(0);
+
+        fluentWaitElementExists(driver, BY_BTN_SORT, 5);
+
+        btnSort.click();
+
+        PageFactory.initElements(driver, this);
+
+        sortingFilters.get(0).click();
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         fluentWaitElementClickable(driver, BY_SEARCH_RESULT_PANEL, 5);
 
@@ -112,13 +148,52 @@ public class SearchResultPage {
     public double getPostagePrice() {
         String price = postagePrice.getText();
 
-        return Double.parseDouble(price);
+        return Double.parseDouble(fetchDouble(price));
     }
 
     public double getTotalPrice() {
         String price = totalPrice.getText();
 
-        return Double.parseDouble(price);
+        return Double.parseDouble(fetchDouble(price));
+    }
+
+    /**
+     * clean a cart as a precondition for test
+     *
+     */
+    public void cleanCart() {
+        if (btnDeleteCart.isEmpty())
+            return;
+
+        btnDeleteCart.get(0).click();
+
+        fluentWaitElementExists(driver, BY_BTN_CART_DELETE_AGREE, 5);
+
+        PageFactory.initElements(driver, this);
+
+        btnCleanCartAgree.click();
+
+        PageFactory.initElements(driver, this);
+
+        fluentWaitElementExists(driver, BY_EMPTY_CART, 5);
+
+        PageFactory.initElements(driver, this);
+    }
+
+    // == private methods ==
+    private String fetchDouble(String price) {
+        String regex="([0-9]+[.0-9]*)";
+
+        Pattern pattern= Pattern.compile(regex);
+        Matcher matcher=pattern.matcher(price);
+
+
+        if (!matcher.find()) {
+            System.out.println("NOT FOUND");
+            throw new AssertionError("Price Not Found");
+        }
+
+        return matcher.group();
     }
 
 }

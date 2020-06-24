@@ -44,6 +44,9 @@ public class SampleTests extends TestBase {
 
         SearchResultPage searchResultPage = new SearchResultPage(driver);
 
+        // if a cart not empty delete all products
+        searchResultPage.cleanCart();
+
         // sort from cheap to expensive
         searchResultPage.sortFromCheapToExpensive();
 
@@ -73,6 +76,6 @@ public class SampleTests extends TestBase {
                 String.format("Total price incorrect, expected %f NIS, found %f NIS",
                         expectedTotalPrice, actualTotalPrice));
 
-        System.out.println(String.format("Total price %f NIS", actualTotalPrice));
+        System.out.println(String.format("Total price %.2f NIS", actualTotalPrice));
     }
 }

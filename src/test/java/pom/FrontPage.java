@@ -47,6 +47,5 @@ public class FrontPage {
         txtSearch.sendKeys(Keys.ENTER);
 
         fluentWaitElementExists(driver, BY_SEARCH_RESULT_PANEL, 5);
-//        fluentWaitElementExists(driver, BY_SORTING_SELECTOR, 5);
     }
 }
